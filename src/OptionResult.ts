@@ -211,6 +211,17 @@ class __Option<A> {
   }
 
   /**
+   * Return the value if present, otherwise throw an error
+   */
+  getOrThrow(this: Option<A>): A | never {
+    if (this === NONE) {
+      throw new Error("Tried to unwrap a Option.None value");
+    }
+
+    return (this as Some<A>).value;
+  }
+
+  /**
    * Return the value if present, and the fallback otherwise
    *
    * (Option\<A>, Option\<A>) => Option\<A>
@@ -587,6 +598,17 @@ class __Result<A, E> {
    */
   getOr(this: Result<A, E>, defaultValue: A): A {
     return this.tag === "Ok" ? this.value : defaultValue;
+  }
+
+  /**
+   * Return the value if present, otherwise throw an error
+   */
+  getOrThrow(this: Result<A, E>): A | never {
+    if (this.tag === "Error") {
+      throw new Error("Tried to unwrap a Result.Error value");
+    }
+
+    return this.value;
   }
 
   /**

@@ -42,6 +42,13 @@ test("Option.getOr", () => {
   expect(Option.None<number>().getOr(0)).toEqual(0);
 });
 
+test("Option.getOrThrow", () => {
+  expect(Option.Some(1).getOrThrow()).toEqual(1);
+  expect(() => Option.None().getOrThrow()).toThrowError(
+    "Tried to unwrap a Option.None value",
+  );
+});
+
 test("Option.mapOr", () => {
   expect(Option.Some(1).mapOr(0, (x) => x * 2)).toEqual(2);
   expect(Option.None<number>().mapOr(0, (x) => x * 2)).toEqual(0);
