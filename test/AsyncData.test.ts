@@ -57,6 +57,16 @@ test("AsyncData.getOr", () => {
   expect(AsyncData.Done(5).getOr(0)).toEqual(5);
 });
 
+test("AsyncData.getOrThrow", () => {
+  expect(AsyncData.Done(5).getOrThrow()).toEqual(5);
+  expect(() => AsyncData.Loading<number>().getOrThrow()).toThrowError(
+    "Tried to unwrap an incomplete AsyncData",
+  );
+  expect(() => AsyncData.NotAsked<number>().getOrThrow()).toThrowError(
+    "Tried to unwrap an incomplete AsyncData",
+  );
+});
+
 test("AsyncData.mapOk", () => {
   expect(AsyncData.NotAsked<number>().mapOr(0, (x) => x * 2)).toEqual(0);
   expect(AsyncData.Loading<number>().mapOr(0, (x) => x * 2)).toEqual(0);

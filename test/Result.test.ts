@@ -76,6 +76,9 @@ test("Result.getOrThrow", () => {
   expect(() => Result.Error(1).getOrThrow()).toThrowError(
     "Tried to unwrap a Result.Error value",
   );
+  expect(() => Result.Error("AnErrorMessage").getOrThrow()).toThrowError(
+    "AnErrorMessage",
+  );
 });
 
 test("Result.mapOr", () => {

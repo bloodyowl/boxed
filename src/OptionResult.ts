@@ -605,6 +605,10 @@ class __Result<A, E> {
    */
   getOrThrow(this: Result<A, E>): A | never {
     if (this.tag === "Error") {
+      if (typeof this.error === "string") {
+        throw new Error(this.error);
+      }
+
       throw new Error("Tried to unwrap a Result.Error value");
     }
 

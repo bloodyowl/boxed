@@ -258,6 +258,16 @@ class __AsyncData<A> {
   }
 
   /**
+   * Return the loaded value if present, otherwise throw an error
+   */
+  getOrThrow(this: AsyncData<A>): A | never {
+    if (this === NOT_ASKED || this === LOADING) {
+      throw new Error("Tried to unwrap an incomplete AsyncData");
+    }
+    return (this as Done<A>).value;
+  }
+
+  /**
    * Maps the value if present, returns the fallback otherwise
    *
    * (AsyncData\<A>, B, A => B) => B
