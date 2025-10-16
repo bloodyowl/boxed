@@ -477,6 +477,9 @@ test("Future concurrent", async () => {
   );
 
   expect(result).toEqual([0, 1, 2, 3, 4]);
+
+  const empty = await Future.concurrent([], { concurrency: 1 });
+  expect(empty).toEqual([]);
 });
 
 test("Future try", async () => {

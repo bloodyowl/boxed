@@ -128,6 +128,11 @@ export class __Future<A> {
       let index = concurrency - 1;
       let done = 0;
 
+      if (array.length === 0) {
+        resolve([]);
+        return;
+      }
+
       const run = (func: () => Future<any>, currentIndex: number) =>
         func().tap((value) => {
           returnValue[currentIndex] = value;
