@@ -12,10 +12,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
+    permissions:
+      id-token: write # Required for OIDC (used for npm publish with Trusted publishing)
+      packages: write
+      contents: write
 
-      - uses: actions/setup-node@v3
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: yarn
@@ -26,8 +31,15 @@ jobs:
       - run: yarn build
 
       - name: Publish
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-          yarn publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
+        run: |
+          npm publish --no-git-checks --access public --registry https://registry.npmjs.org
+
+      - name: Publish on GitHub # Publish to GitHub Package Registry for internal usage
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc
+          echo "always-auth=true" >> ~/.npmrc
+          npm publish --no-git-checks --access restricted --registry https://npm.pkg.github.com
