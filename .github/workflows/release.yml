@@ -5,10 +5,8 @@ name: Release
 
 on:
   push:
-    branches:
-      - "*"
-    # tags:
-    #   - "v*"
+    tags:
+      - "v*"
 
 jobs:
   build:
@@ -32,11 +30,11 @@ jobs:
       - run: yarn test
       - run: yarn build
 
-      # - name: Publish
-      #   env:
-      #     NPM_CONFIG_PROVENANCE: true
-      #   run: |
-      #     npm publish --no-git-checks --access public --registry https://registry.npmjs.org
+      - name: Publish
+        env:
+          NPM_CONFIG_PROVENANCE: true
+        run: |
+          npm publish --no-git-checks --access public --registry https://registry.npmjs.org
 
       - name: Publish on GitHub # Publish to GitHub Package Registry for internal usage
         env:
