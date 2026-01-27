@@ -5,8 +5,10 @@ name: Release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - "*"
+    # tags:
+    #   - "v*"
 
 jobs:
   build:
@@ -25,9 +27,17 @@ jobs:
       - run: yarn test
       - run: yarn build
 
-      - name: Publish
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-          yarn publish
+      # - name: Publish
+      #   run: |
+      #     echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+      #     yarn publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish on GitHub # Publish to GitHub Package Registry for internal usage
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc
+          echo "always-auth=true" >> ~/.npmrc
+          npm publish --no-git-checks --access restricted --registry https://npm.pkg.github.com
