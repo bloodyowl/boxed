@@ -40,4 +40,4 @@ jobs:
         run: |
           echo "//npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc
           echo "always-auth=true" >> ~/.npmrc
-          npm publish --no-git-checks --access restricted --registry https://npm.pkg.github.com
+          npm publish --no-git-checks --access restricted --registry https://npm.pkg.github.com --tag legacy
