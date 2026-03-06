@@ -3,14 +3,33 @@ import { Result } from "./OptionResult";
 import { LooseRecord } from "./types";
 import { zip } from "./ZipUnzip";
 
+let globalPanicListeners: Array<(error: unknown) => void> | undefined;
+
 export class __Future<A> {
   /**
    * Creates a new future from its initializer function (like `new Promise(...)`)
    */
   static make = <A>(
-    init: (resolver: (value: A) => void) => (() => void) | void,
+    init: (
+      resolver: (value: A) => void,
+      panic: (error: unknown) => void,
+    ) => (() => void) | void,
   ): Future<A> => {
     const future = Object.create(FUTURE_PROTO) as Future<A>;
+
+    const panic = (error: unknown) => {
+      if (future._state.tag === "Pending") {
+        const panicCallbacks = future._state.panicCallbacks;
+        future._state = { tag: "Panicked", error };
+        panicCallbacks?.forEach((func) => func(error));
+        globalPanicListeners?.forEach((func) => {
+          try {
+            func(error);
+          } catch (_) {}
+        });
+      }
+    };
+
     const resolver = (value: A) => {
       if (future._state.tag === "Pending") {
         const resolveCallbacks = future._state.resolveCallbacks;
@@ -18,8 +37,15 @@ export class __Future<A> {
         resolveCallbacks?.forEach((func) => func(value));
       }
     };
+
     future._state = { tag: "Pending" };
-    future._state.cancel = init(resolver);
+
+    try {
+      future._state.cancel = init(resolver, panic);
+    } catch (e) {
+      panic(e);
+    }
+
     return future as Future<A>;
   };
 
@@ -123,7 +149,7 @@ export class __Future<A> {
     array: Futures,
     { concurrency }: { concurrency: number },
   ) => {
-    return Future.make((resolve) => {
+    return Future.make((resolve, panic) => {
       const returnValue = Array(array.length);
       let index = concurrency - 1;
       let done = 0;
@@ -133,8 +159,15 @@ export class __Future<A> {
         return;
       }
 
-      const run = (func: () => Future<any>, currentIndex: number) =>
-        func().tap((value) => {
+      const run = (func: () => Future<any>, currentIndex: number) => {
+        let f: Future<any>;
+        try {
+          f = func();
+        } catch (e) {
+          panic(e);
+          return;
+        }
+        f.onResolve((value) => {
           returnValue[currentIndex] = value;
           if (++done < array.length) {
             const next = array[++index];
@@ -145,6 +178,8 @@ export class __Future<A> {
             resolve(returnValue);
           }
         });
+        f.onPanic(panic);
+      };
 
       array.slice(0, concurrency).forEach(run);
     }) as unknown as Future<{
@@ -154,16 +189,36 @@ export class __Future<A> {
     }>;
   };
 
+  /**
+   * Registers a global panic listener. Returns an unsubscribe function.
+   */
+  static onPanic = (
+    listener: (error: unknown) => void,
+  ): (() => void) => {
+    globalPanicListeners = globalPanicListeners ?? [];
+    globalPanicListeners.push(listener);
+    return () => {
+      if (globalPanicListeners) {
+        const index = globalPanicListeners.indexOf(listener);
+        if (index !== -1) {
+          globalPanicListeners.splice(index, 1);
+        }
+      }
+    };
+  };
+
   // Not accessible from the outside
   private _state:
     | {
         tag: "Pending";
         resolveCallbacks?: Array<(value: A) => void>;
+        panicCallbacks?: Array<(error: unknown) => void>;
         cancel?: void | (() => void);
         cancelCallbacks?: Array<() => void>;
       }
     | { tag: "Cancelled" }
-    | { tag: "Resolved"; value: A };
+    | { tag: "Resolved"; value: A }
+    | { tag: "Panicked"; error: unknown };
 
   protected constructor() {
     this._state = { tag: "Pending" };
@@ -178,6 +233,18 @@ export class __Future<A> {
       this._state.resolveCallbacks.push(func);
     } else if (this._state.tag === "Resolved") {
       func(this._state.value);
+    }
+  }
+
+  /**
+   * Runs the callback with the error when panicked
+   */
+  onPanic(func: (error: unknown) => void) {
+    if (this._state.tag === "Pending") {
+      this._state.panicCallbacks = this._state.panicCallbacks ?? [];
+      this._state.panicCallbacks.push(func);
+    } else if (this._state.tag === "Panicked") {
+      func(this._state.error);
     }
   }
 
@@ -215,10 +282,19 @@ export class __Future<A> {
    * (Future\<A>, A => B) => Future\<B>
    */
   map<B>(func: (value: A) => B, propagateCancel = false): Future<B> {
-    const future = Future.make<B>((resolve) => {
+    const future = Future.make<B>((resolve, panic) => {
       this.onResolve((value) => {
-        resolve(func(value));
+        let result: B;
+        try {
+          result = func(value);
+        } catch (e) {
+          panic(e);
+          return;
+        }
+        resolve(result);
       });
+
+      this.onPanic(panic);
 
       if (propagateCancel) {
         return () => {
@@ -234,8 +310,11 @@ export class __Future<A> {
     return future;
   }
 
-  then(func: (value: A) => void) {
+  then(func: (value: A) => void, onRejected?: (error: unknown) => void) {
     this.onResolve(func);
+    if (onRejected) {
+      this.onPanic(onRejected);
+    }
     return this;
   }
 
@@ -248,12 +327,21 @@ export class __Future<A> {
     func: (value: A) => Future<B>,
     propagateCancel = false,
   ): Future<B> {
-    const future = Future.make<B>((resolve) => {
+    const future = Future.make<B>((resolve, panic) => {
       this.onResolve((value) => {
-        const returnedFuture = func(value);
+        let returnedFuture: Future<B>;
+        try {
+          returnedFuture = func(value);
+        } catch (e) {
+          panic(e);
+          return;
+        }
         returnedFuture.onResolve(resolve);
+        returnedFuture.onPanic(panic);
         returnedFuture.onCancel(() => future.cancel());
       });
+
+      this.onPanic(panic);
 
       if (propagateCancel) {
         return () => {
@@ -270,49 +358,62 @@ export class __Future<A> {
   }
 
   /**
-   * Runs the callback and returns `this`
+   * Runs the callback and returns a new future that resolves to the same value
    */
   tap(this: Future<A>, func: (value: A) => unknown): Future<A> {
-    this.onResolve(func);
-    return this;
+    const future = Future.make<A>((resolve, panic) => {
+      this.onResolve((value) => {
+        try {
+          func(value);
+        } catch (e) {
+          panic(e);
+          return;
+        }
+        resolve(value);
+      });
+
+      this.onPanic(panic);
+    });
+
+    this.onCancel(() => {
+      future.cancel();
+    });
+
+    return future;
   }
 
   /**
    * For Future<Result<*>>:
    *
-   * Runs the callback with the value if ok and returns `this`
+   * Runs the callback with the value if ok and returns a new future
    */
   tapOk<A, E>(
     this: Future<Result<A, E>>,
     func: (value: A) => unknown,
   ): Future<Result<A, E>> {
-    this.onResolve((value) => {
+    return this.tap((value) => {
       value.match({
-        Ok: (value) => func(value),
+        Ok: (v) => func(v),
         Error: () => {},
       });
     });
-
-    return this;
   }
 
   /**
    * For Future<Result<*>>:
    *
-   * Runs the callback with the error if in error and returns `this`
+   * Runs the callback with the error if in error and returns a new future
    */
   tapError<A, E>(
     this: Future<Result<A, E>>,
     func: (value: E) => unknown,
   ): Future<Result<A, E>> {
-    this.onResolve((value) => {
+    return this.tap((value) => {
       value.match({
         Ok: () => {},
-        Error: (error) => func(error),
+        Error: (e) => func(e),
       });
     });
-
-    return this;
   }
 
   /**
@@ -424,11 +525,83 @@ export class __Future<A> {
   }
 
   /**
+   * Runs the side-effect callback when panicked, then re-panics with the original error
+   */
+  tapPanic(func: (error: unknown) => void): Future<A> {
+    const future = Future.make<A>((resolve, panic) => {
+      this.onResolve(resolve);
+      this.onPanic((error) => {
+        try {
+          func(error);
+        } catch (e) {
+          panic(e);
+          return;
+        }
+        panic(error);
+      });
+    });
+
+    this.onCancel(() => {
+      future.cancel();
+    });
+
+    return future;
+  }
+
+  /**
+   * Catches a panic and recovers with a value or Future
+   */
+  catchPanic(handler: (error: unknown) => A | Future<A>): Future<A> {
+    const future = Future.make<A>((resolve, panic) => {
+      this.onResolve(resolve);
+      this.onPanic((error) => {
+        let result: A | Future<A>;
+        try {
+          result = handler(error);
+        } catch (e) {
+          panic(e);
+          return;
+        }
+        if (Future.isFuture(result)) {
+          (result as Future<A>).onResolve(resolve);
+          (result as Future<A>).onPanic(panic);
+          (result as Future<A>).onCancel(() => future.cancel());
+        } else {
+          resolve(result as A);
+        }
+      });
+    });
+
+    this.onCancel(() => {
+      future.cancel();
+    });
+
+    return future;
+  }
+
+  /**
+   * Converts panics to Result.Error and resolved values to Result.Ok
+   */
+  panicToResult(): Future<Result<A, unknown>> {
+    const future = Future.make<Result<A, unknown>>((resolve) => {
+      this.onResolve((value) => resolve(Result.Ok(value)));
+      this.onPanic((error) => resolve(Result.Error(error)));
+    });
+
+    this.onCancel(() => {
+      future.cancel();
+    });
+
+    return future;
+  }
+
+  /**
    * Converts the future into a promise
    */
   toPromise(): Promise<A> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this.onResolve(resolve);
+      this.onPanic(reject);
     });
   }
 
@@ -445,6 +618,7 @@ export class __Future<A> {
           Error: reject,
         });
       });
+      this.onPanic(reject);
     });
   }
 }
