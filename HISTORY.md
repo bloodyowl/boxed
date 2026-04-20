@@ -1,3 +1,9 @@
+# 3.3.1
+
+Fixes:
+
+- Fix package path (a397f7c)
+
 # 3.3.0
 
 Changes:
