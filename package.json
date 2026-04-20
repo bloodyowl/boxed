@@ -1,6 +1,6 @@
 {
   "name": "@bloodyowl/boxed",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "license": "MIT",
   "description": "Utility types for functional TypeScript",
   "author": "Matthias Le Brun <bloodyowl@swan.io>",
