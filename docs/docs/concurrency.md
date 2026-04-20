@@ -11,8 +11,8 @@ Using `Future.concurrent`, you can specify the maximum concurrency for your arra
 Future.concurrent(
   userIds.map((userId) => {
     // notice we return a function
-    return () => getUserById(userId);
+    return () => getUserById(userId)
   }),
   { concurrency: 10 },
-);
+)
 ```

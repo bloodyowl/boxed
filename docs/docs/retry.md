@@ -11,7 +11,7 @@ If `getUserById` outputs a `Result.Ok` value, the future resolves, if it outputs
 
 ```ts
 // retry immediately after failure
-Future.retry(() => getUserById(userId), { max: 3 });
+Future.retry(() => getUserById(userId), { max: 3 })
 // Future<Result<...>>
 ```
 
@@ -23,9 +23,9 @@ The function you pass `Future.retry` takes an `attempt` parameter, which is the 
 // adding delay
 Future.retry(
   (attempt) => {
-    return Future.wait(attempt * 100).flatMap(() => getUserById(userId));
+    return Future.wait(attempt * 100).flatMap(() => getUserById(userId))
   },
   { max: 10 },
-);
+)
 // Future<Result<...>>
 ```

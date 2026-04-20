@@ -1,14 +1,14 @@
-import Link from "@docusaurus/Link";
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import HomepageFeatures from "@site/src/components/HomepageFeatures";
-import CodeBlock from "@theme/CodeBlock";
-import Layout from "@theme/Layout";
-import clsx from "clsx";
-import React from "react";
-import styles from "./index.module.css";
+import Link from "@docusaurus/Link"
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
+import HomepageFeatures from "@site/src/components/HomepageFeatures"
+import CodeBlock from "@theme/CodeBlock"
+import Layout from "@theme/Layout"
+import clsx from "clsx"
+import React from "react"
+import styles from "./index.module.css"
 
 function HomepageHeader() {
-  const { siteConfig } = useDocusaurusContext();
+  const { siteConfig } = useDocusaurusContext()
   return (
     <header className={clsx("hero hero--primary", styles.heroBanner)}>
       <div className={styles.heroLeft}>
@@ -54,7 +54,7 @@ const UserCard = ({user}: {user: AsyncData<User>}) => {
         </CodeBlock>
       </div>
     </header>
-  );
+  )
 }
 
 const Block = ({ children, reversed = false, title, description }) => {
@@ -68,35 +68,35 @@ const Block = ({ children, reversed = false, title, description }) => {
         <p>{description}</p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default function Home() {
-  const { siteConfig } = useDocusaurusContext();
-  const videoContainer = React.useRef(null);
+  const { siteConfig } = useDocusaurusContext()
+  const videoContainer = React.useRef(null)
 
   React.useEffect(() => {
-    const element = videoContainer.current;
+    const element = videoContainer.current
     if (element) {
       const intersectionObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              const video = element.querySelector("video");
+              const video = element.querySelector("video")
               if (video) {
-                video.play();
+                video.play()
               }
             }
-          });
+          })
         },
         {
           rootMargin: "100px",
         },
-      );
-      intersectionObserver.observe(element);
-      return () => intersectionObserver.unobserve(element);
+      )
+      intersectionObserver.observe(element)
+      return () => intersectionObserver.unobserve(element)
     }
-  }, []);
+  }, [])
 
   return (
     <Layout
@@ -208,5 +208,5 @@ export default function Home() {
         </div>
       </main>
     </Layout>
-  );
+  )
 }

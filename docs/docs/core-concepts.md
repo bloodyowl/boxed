@@ -43,13 +43,13 @@ When you extract the value from the box, you have a few options:
 // Let's assument we have `option` be of type `Option<number>`
 
 // Returns the value if present or the fallback otherwise
-const a = option.getOr(0);
+const a = option.getOr(0)
 
 // Explode the box
 const b = option.match({
   Some: (value) => value,
   None: () => 0,
-});
+})
 ```
 
 ## Data-manipulation basics
@@ -63,16 +63,16 @@ Here's a visual explanation:
 The `map` and `flatMap` functions allow you to transform data in a typesafe way:
 
 ```ts
-const some = Option.Some(1);
+const some = Option.Some(1)
 // Option.Some<1>
 
-const none = Option.None();
+const none = Option.None()
 // Option.None
 
-const doubledSome = some.map((x) => x * 2);
+const doubledSome = some.map((x) => x * 2)
 // Option.Some<2>
 
-const doubledNone = none.map((x) => x * 2);
+const doubledNone = none.map((x) => x * 2)
 // Option.None -> Nothing to transform!
 ```
 
@@ -80,18 +80,18 @@ The `flatMap` lets you return another option, which can be useful for nested opt
 
 ```ts
 type UserInfo = {
-  name: Option<string>;
-};
+  name: Option<string>
+}
 
 type User = {
-  id: string;
-  info: Option<UserInfo>;
-};
+  id: string
+  info: Option<UserInfo>
+}
 
 const name = user
   .flatMap((user) => user.info) // Returns the Option<UserInfo>
   .flatMap((info) => info.name) // Returns the Option<string>
-  .getOr("Anonymous user");
+  .getOr("Anonymous user")
 ```
 
 ## The main kind of boxes

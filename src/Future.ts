@@ -1,7 +1,7 @@
-import { keys, values } from "./Dict";
-import { Result } from "./OptionResult";
-import { LooseRecord } from "./types";
-import { zip } from "./ZipUnzip";
+import { keys, values } from "./Dict"
+import { Result } from "./OptionResult"
+import { LooseRecord } from "./types"
+import { zip } from "./ZipUnzip"
 
 export class __Future<A> {
   /**
@@ -10,30 +10,30 @@ export class __Future<A> {
   static make = <A>(
     init: (resolver: (value: A) => void) => (() => void) | void,
   ): Future<A> => {
-    const future = Object.create(FUTURE_PROTO) as Future<A>;
+    const future = Object.create(FUTURE_PROTO) as Future<A>
     const resolver = (value: A) => {
       if (future._state.tag === "Pending") {
-        const resolveCallbacks = future._state.resolveCallbacks;
-        future._state = { tag: "Resolved", value };
-        resolveCallbacks?.forEach((func) => func(value));
+        const resolveCallbacks = future._state.resolveCallbacks
+        future._state = { tag: "Resolved", value }
+        resolveCallbacks?.forEach((func) => func(value))
       }
-    };
-    future._state = { tag: "Pending" };
-    future._state.cancel = init(resolver);
-    return future as Future<A>;
-  };
+    }
+    future._state = { tag: "Pending" }
+    future._state.cancel = init(resolver)
+    return future as Future<A>
+  }
 
   static isFuture = (value: unknown): value is Future<unknown> =>
-    value != null && Object.prototype.isPrototypeOf.call(FUTURE_PROTO, value);
+    value != null && Object.prototype.isPrototypeOf.call(FUTURE_PROTO, value)
 
   /**
    * Creates a future resolved to the passed value
    */
   static value = <A>(value: A): Future<A> => {
-    const future = Object.create(FUTURE_PROTO);
-    future._state = { tag: "Resolved", value };
-    return future as Future<A>;
-  };
+    const future = Object.create(FUTURE_PROTO)
+    future._state = { tag: "Resolved", value }
+    return future as Future<A>
+  }
 
   /**
    * Converts a Promise to a Future\<Result\<Value, unknown>>
@@ -45,8 +45,8 @@ export class __Future<A> {
       promise.then(
         (ok) => resolve(Result.Ok(ok)),
         (error: E) => resolve(Result.Error(error)),
-      );
-    });
+      )
+    })
   }
 
   /**
@@ -56,31 +56,31 @@ export class __Future<A> {
     futures: Futures,
     propagateCancel = false,
   ) => {
-    const length = futures.length;
-    let acc = Future.value<Array<unknown>>([]);
-    let index = 0;
+    const length = futures.length
+    let acc = Future.value<Array<unknown>>([])
+    let index = 0
 
     while (true) {
       if (index >= length) {
         return acc as unknown as Future<{
-          [K in keyof Futures]: Futures[K] extends Future<infer T> ? T : never;
-        }>;
+          [K in keyof Futures]: Futures[K] extends Future<infer T> ? T : never
+        }>
       }
 
-      const item = futures[index];
+      const item = futures[index]
 
       if (item != null) {
         acc = acc.flatMap((array) => {
           return item.map((value) => {
-            array.push(value);
-            return array;
-          }, propagateCancel);
-        }, propagateCancel);
+            array.push(value)
+            return array
+          }, propagateCancel)
+        }, propagateCancel)
       }
 
-      index++;
+      index++
     }
-  };
+  }
 
   /**
    * Turns an dict of futures into a future of dict
@@ -88,20 +88,20 @@ export class __Future<A> {
   static allFromDict = <const Dict extends LooseRecord<Future<any>>>(
     dict: Dict,
   ): Future<{
-    [K in keyof Dict]: Dict[K] extends Future<infer T> ? T : never;
+    [K in keyof Dict]: Dict[K] extends Future<infer T> ? T : never
   }> => {
-    const dictKeys = keys(dict);
+    const dictKeys = keys(dict)
 
     return Future.all(values(dict)).map((values) =>
       Object.fromEntries(zip(dictKeys, values)),
-    );
-  };
+    )
+  }
 
   static wait = (ms: number) =>
     Future.make<void>((resolve) => {
-      const timeoutId = setTimeout(() => resolve(), ms);
-      return () => clearTimeout(timeoutId);
-    });
+      const timeoutId = setTimeout(() => resolve(), ms)
+      return () => clearTimeout(timeoutId)
+    })
 
   static retry = <A, E>(
     getFuture: (attempt: number) => Future<Result<A, E>>,
@@ -110,63 +110,61 @@ export class __Future<A> {
     const run = (attempt: number): Future<Result<A, E>> =>
       getFuture(attempt).flatMapError((error) => {
         if (attempt + 1 < max) {
-          return run(attempt + 1);
+          return run(attempt + 1)
         } else {
-          return Future.value(Result.Error(error));
+          return Future.value(Result.Error(error))
         }
-      });
+      })
 
-    return run(0);
-  };
+    return run(0)
+  }
 
   static concurrent = <const Futures extends readonly (() => Future<any>)[]>(
     array: Futures,
     { concurrency }: { concurrency: number },
   ) => {
     return Future.make((resolve) => {
-      const returnValue = Array(array.length);
-      let index = concurrency - 1;
-      let done = 0;
+      const returnValue = Array(array.length)
+      let index = concurrency - 1
+      let done = 0
 
       if (array.length === 0) {
-        resolve([]);
-        return;
+        resolve([])
+        return
       }
 
       const run = (func: () => Future<any>, currentIndex: number) =>
         func().tap((value) => {
-          returnValue[currentIndex] = value;
+          returnValue[currentIndex] = value
           if (++done < array.length) {
-            const next = array[++index];
+            const next = array[++index]
             if (next != undefined) {
-              run(next, index);
+              run(next, index)
             }
           } else {
-            resolve(returnValue);
+            resolve(returnValue)
           }
-        });
+        })
 
-      array.slice(0, concurrency).forEach(run);
+      array.slice(0, concurrency).forEach(run)
     }) as unknown as Future<{
-      [K in keyof Futures]: Futures[K] extends () => Future<infer T>
-        ? T
-        : never;
-    }>;
-  };
+      [K in keyof Futures]: Futures[K] extends () => Future<infer T> ? T : never
+    }>
+  }
 
   // Not accessible from the outside
   private _state:
     | {
-        tag: "Pending";
-        resolveCallbacks?: Array<(value: A) => void>;
-        cancel?: void | (() => void);
-        cancelCallbacks?: Array<() => void>;
+        tag: "Pending"
+        resolveCallbacks?: Array<(value: A) => void>
+        cancel?: void | (() => void)
+        cancelCallbacks?: Array<() => void>
       }
     | { tag: "Cancelled" }
-    | { tag: "Resolved"; value: A };
+    | { tag: "Resolved"; value: A }
 
   protected constructor() {
-    this._state = { tag: "Pending" };
+    this._state = { tag: "Pending" }
   }
 
   /**
@@ -174,10 +172,10 @@ export class __Future<A> {
    */
   onResolve(func: (value: A) => void) {
     if (this._state.tag === "Pending") {
-      this._state.resolveCallbacks = this._state.resolveCallbacks ?? [];
-      this._state.resolveCallbacks.push(func);
+      this._state.resolveCallbacks = this._state.resolveCallbacks ?? []
+      this._state.resolveCallbacks.push(func)
     } else if (this._state.tag === "Resolved") {
-      func(this._state.value);
+      func(this._state.value)
     }
   }
 
@@ -186,10 +184,10 @@ export class __Future<A> {
    */
   onCancel(func: () => void) {
     if (this._state.tag === "Pending") {
-      this._state.cancelCallbacks = this._state.cancelCallbacks ?? [];
-      this._state.cancelCallbacks.push(func);
+      this._state.cancelCallbacks = this._state.cancelCallbacks ?? []
+      this._state.cancelCallbacks.push(func)
     } else if (this._state.tag === "Cancelled") {
-      func();
+      func()
     }
   }
 
@@ -198,14 +196,14 @@ export class __Future<A> {
    */
   cancel() {
     if (this._state.tag === "Pending") {
-      const { cancel, cancelCallbacks } = this._state;
+      const { cancel, cancelCallbacks } = this._state
       // We have to set the future as cancelled first to avoid an infinite loop
-      this._state = { tag: "Cancelled" };
+      this._state = { tag: "Cancelled" }
       if (cancel != undefined) {
         // @ts-ignore Compiler doesn't like that `cancel` is potentially `void`
-        cancel();
+        cancel()
       }
-      cancelCallbacks?.forEach((func) => func());
+      cancelCallbacks?.forEach((func) => func())
     }
   }
 
@@ -217,26 +215,26 @@ export class __Future<A> {
   map<B>(func: (value: A) => B, propagateCancel = false): Future<B> {
     const future = Future.make<B>((resolve) => {
       this.onResolve((value) => {
-        resolve(func(value));
-      });
+        resolve(func(value))
+      })
 
       if (propagateCancel) {
         return () => {
-          this.cancel();
-        };
+          this.cancel()
+        }
       }
-    });
+    })
 
     this.onCancel(() => {
-      future.cancel();
-    });
+      future.cancel()
+    })
 
-    return future;
+    return future
   }
 
   then(func: (value: A) => void) {
-    this.onResolve(func);
-    return this;
+    this.onResolve(func)
+    return this
   }
 
   /**
@@ -250,31 +248,31 @@ export class __Future<A> {
   ): Future<B> {
     const future = Future.make<B>((resolve) => {
       this.onResolve((value) => {
-        const returnedFuture = func(value);
-        returnedFuture.onResolve(resolve);
-        returnedFuture.onCancel(() => future.cancel());
-      });
+        const returnedFuture = func(value)
+        returnedFuture.onResolve(resolve)
+        returnedFuture.onCancel(() => future.cancel())
+      })
 
       if (propagateCancel) {
         return () => {
-          this.cancel();
-        };
+          this.cancel()
+        }
       }
-    });
+    })
 
     this.onCancel(() => {
-      future.cancel();
-    });
+      future.cancel()
+    })
 
-    return future;
+    return future
   }
 
   /**
    * Runs the callback and returns `this`
    */
   tap(this: Future<A>, func: (value: A) => unknown): Future<A> {
-    this.onResolve(func);
-    return this;
+    this.onResolve(func)
+    return this
   }
 
   /**
@@ -290,10 +288,10 @@ export class __Future<A> {
       value.match({
         Ok: (value) => func(value),
         Error: () => {},
-      });
-    });
+      })
+    })
 
-    return this;
+    return this
   }
 
   /**
@@ -309,10 +307,10 @@ export class __Future<A> {
       value.match({
         Ok: () => {},
         Error: (error) => func(error),
-      });
-    });
+      })
+    })
 
-    return this;
+    return this
   }
 
   /**
@@ -329,8 +327,8 @@ export class __Future<A> {
       return value.match({
         Ok: (value) => func(value),
         Error: () => value as unknown as Result<B, E | F>,
-      });
-    }, propagateCancel);
+      })
+    }, propagateCancel)
   }
 
   /**
@@ -347,8 +345,8 @@ export class __Future<A> {
       return value.match({
         Error: (error) => func(error),
         Ok: () => value as unknown as Result<A | B, F>,
-      });
-    }, propagateCancel);
+      })
+    }, propagateCancel)
   }
 
   /**
@@ -365,8 +363,8 @@ export class __Future<A> {
       return value.match({
         Ok: (value) => Result.Ok(func(value)),
         Error: () => value as unknown as Result<B, E>,
-      });
-    }, propagateCancel);
+      })
+    }, propagateCancel)
   }
 
   /**
@@ -383,8 +381,8 @@ export class __Future<A> {
       return value.match({
         Ok: () => value as unknown as Result<A, B>,
         Error: (error) => Result.Error(func(error)),
-      });
-    }, propagateCancel);
+      })
+    }, propagateCancel)
   }
 
   /**
@@ -401,8 +399,8 @@ export class __Future<A> {
       return value.match({
         Ok: (value) => func(value) as Future<Result<B, F | E>>,
         Error: () => Future.value(value as unknown as Result<B, F | E>),
-      });
-    }, propagateCancel);
+      })
+    }, propagateCancel)
   }
 
   /**
@@ -419,8 +417,8 @@ export class __Future<A> {
       return value.match({
         Ok: () => Future.value(value as unknown as Result<A | B, F>),
         Error: (error) => func(error) as Future<Result<A | B, F>>,
-      });
-    }, propagateCancel);
+      })
+    }, propagateCancel)
   }
 
   /**
@@ -428,8 +426,8 @@ export class __Future<A> {
    */
   toPromise(): Promise<A> {
     return new Promise((resolve) => {
-      this.onResolve(resolve);
-    });
+      this.onResolve(resolve)
+    })
   }
 
   /**
@@ -443,16 +441,16 @@ export class __Future<A> {
         value.match({
           Ok: resolve,
           Error: reject,
-        });
-      });
-    });
+        })
+      })
+    })
   }
 }
 
 const FUTURE_PROTO = Object.create(
   null,
   Object.getOwnPropertyDescriptors(__Future.prototype),
-);
+)
 
-export const Future = __Future;
-export type Future<A> = __Future<A>;
+export const Future = __Future
+export type Future<A> = __Future<A>

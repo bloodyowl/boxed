@@ -8,13 +8,13 @@ sidebar_label: Deferred
 Returns a future and its resolver:
 
 ```ts
-import { Deferred } from "@bloodyowl/boxed";
+import { Deferred } from "@bloodyowl/boxed"
 
-const [future, resolve] = Deferred.make<string>();
+const [future, resolve] = Deferred.make<string>()
 
 // subscribe to the promise
-future.onResolve(console.log);
+future.onResolve(console.log)
 
 // resolve from elsewhere
-resolve("Hello!");
+resolve("Hello!")
 ```

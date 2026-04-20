@@ -70,13 +70,13 @@ Takes a `Future<Result<Ok, Error>>` and a `f` function taking `Ok` and returning
 
 ```ts title="Examples"
 Future.value(Result.Ok(3)).mapOk((ok) => {
-  return ok * 2;
-});
+  return ok * 2
+})
 // Future<Result.Ok<6>>
 
 Future.value(Result.Error("something")).mapOk((ok) => {
-  return ok * 2;
-});
+  return ok * 2
+})
 // Future<Result.Error<"something">>
 ```
 
@@ -93,13 +93,13 @@ Takes a `Future<Result<Ok, Error>>` and a `f` function taking `Error` and return
 
 ```ts title="Examples"
 Future.value(Result.Error(3)).mapError((error) => {
-  return error * 2;
-});
+  return error * 2
+})
 // Future<Result.Error<6>>
 
 Future.value(Result.Ok("something")).mapError((ok) => {
-  return ok * 2;
-});
+  return ok * 2
+})
 // Future<Result.Ok<"something">>
 ```
 
@@ -115,17 +115,15 @@ Future<Result<A, E>>.flatMapOk<B, F>(
 Takes a `Future<Result<Ok, Error>>` and a `f` function taking `Ok` returning a `Future<Result<ReturnValue, Error>>`
 
 ```ts title="Examples"
-Future.value(Result.Ok(3)).flatMapOk((ok) => Future.value(Result.Ok(ok * 2)));
+Future.value(Result.Ok(3)).flatMapOk((ok) => Future.value(Result.Ok(ok * 2)))
 // Future<Result.Ok<6>>
 
-Future.value(Result.Ok(3)).flatMapOk((ok) =>
-  Future.value(Result.Error("Nope")),
-);
+Future.value(Result.Ok(3)).flatMapOk((ok) => Future.value(Result.Error("Nope")))
 // Future<Result.Error<"Nope">>
 
 Future.value(Result.Error("Error")).flatMapOk((ok) =>
   Future.value(Result.Ok(ok * 2)),
-);
+)
 // Future<Result.Error<"Error">>
 ```
 
@@ -143,17 +141,17 @@ Takes a `Future<Result<Ok, Error>>` and a `f` function taking `Error` returning 
 ```ts title="Examples"
 Future.value(Result.Ok(3)).flatMapError((error) =>
   Future.value(Result.Ok(ok * 2)),
-);
+)
 // Future<Result.Ok<3>>
 
 Future.value(Result.Error("Error")).flatMapError((error) =>
   Future.value(Result.Error("Nope")),
-);
+)
 // Future<Result.Error<"Nope">>
 
 Future.value(Result.Error("Error")).flatMapError((error) =>
   Future.value(Result.Ok(1)),
-);
+)
 // Future<Result.Ok<1>>
 ```
 
@@ -166,7 +164,7 @@ Future<Result<A, E>>.tapOk(func: (value: A) => unknown): Future<Result<A, E>>
 Runs `f` if value is `Ok` with the future value, and returns the original future. Useful for debugging.
 
 ```ts title="Examples"
-future.tapOk(console.log);
+future.tapOk(console.log)
 ```
 
 ### .tapError(f)
@@ -178,7 +176,7 @@ Future<Result<A, E>>.tapError(func: (value: E) => unknown): Future<Result<A, E>>
 Runs `f` if value is `Error` with the future value, and returns the original future. Useful for debugging.
 
 ```ts title="Examples"
-future.tapError(console.log);
+future.tapError(console.log)
 ```
 
 ### .resultToPromise()
@@ -190,10 +188,10 @@ Future<Result<A, E>>.resultToPromise(): Promise<A>
 Takes a `Future<Result<Ok, Error>>` and returns a `Promise<Ok>`, rejecting the promise with `Error` in this state.
 
 ```ts title="Examples"
-Future.value(Result.Ok(1)).resultToPromise();
+Future.value(Result.Ok(1)).resultToPromise()
 // Promise<1>
 
-Future.value(Result.Reject(1)).resultToPromise();
+Future.value(Result.Reject(1)).resultToPromise()
 // Promise (rejected with 1)
 ```
 
@@ -208,9 +206,9 @@ const futures = [
   Future.value(Result.Ok(1)),
   Future.value(Result.Ok(2)),
   Future.value(Result.Ok(3)),
-];
+]
 
-Future.all(futures).map(Result.all);
+Future.all(futures).map(Result.all)
 // Future<Result.Ok<[1, 2, 3]>>
 ```
 
@@ -223,15 +221,15 @@ const input = [
   Future.value(Result.Ok(1)),
   Future.value(Result.Ok(2)),
   Future.value(Result.Ok(3)),
-];
+]
 
 // Future<Array<Result<number, never>>>
 // -> Future<[Result.Ok<1>>, Result.Ok<2>>, Result.Ok<3>]>
-const step1 = Future.all(input);
+const step1 = Future.all(input)
 
 // Future<Result<Array<number>, never>>
 // -> Future<[Result.Ok<[1, 2, 3]>>
-const step2 = step1.map(Result.all);
+const step2 = step1.map(Result.all)
 ```
 
 ### Future.allFromDict(resultFutures)
@@ -243,9 +241,9 @@ const futures = {
   a: Future.value(Result.Ok(1)),
   b: Future.value(Result.Ok(2)),
   c: Future.value(Result.Ok(3)),
-};
+}
 
-Future.allFromDict(futures).map(Result.allFromDict);
+Future.allFromDict(futures).map(Result.allFromDict)
 // Future<[Result.Ok<{a: 1, b: 2, c: 3}>>
 ```
 
@@ -258,15 +256,15 @@ const input = {
   a: Future.value(Result.Ok(1)),
   b: Future.value(Result.Ok(2)),
   c: Future.value(Result.Ok(3)),
-};
+}
 
 // Future<Dict<Result<number, never>>>
 // -> Future<{a: Result.Ok<1>>, b: Result.Ok<2>>, c: Result.Ok<3>}>
-const step1 = Future.all(input);
+const step1 = Future.all(input)
 
 // Future<Result<Array<number>, never>>
 // -> Future<[Result.Ok<{a: 1, b: 2, c: 3}>>
-const step2 = step1.map(Result.all);
+const step2 = step1.map(Result.all)
 ```
 
 ### Future.retry(getFuture)
@@ -283,19 +281,19 @@ The function provides a 0-based `attempt` count to the function if you need to i
 // retry immediately after failure
 Future.retry(
   (attempt) => {
-    return getUserById(userId);
+    return getUserById(userId)
   },
   { max: 3 },
-);
+)
 // Future<Result<...>>
 
 // adding delay
 Future.retry(
   (attempt) => {
-    return Future.wait(attempt * 100).flatMap(() => getUserById(userId));
+    return Future.wait(attempt * 100).flatMap(() => getUserById(userId))
   },
   { max: 10 },
-);
+)
 // Future<Result<...>>
 ```
 

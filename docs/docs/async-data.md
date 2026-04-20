@@ -16,13 +16,13 @@ The `AsyncData` type enables representing asynchronous flows (e.g. requests). Th
 To create an async data, use the `NotAsked`, `Loading` and `Done` constructors:
 
 ```ts title="Examples"
-import { AsyncData } from "@bloodyowl/boxed";
+import { AsyncData } from "@bloodyowl/boxed"
 
-const notAsked = AsyncData.NotAsked();
+const notAsked = AsyncData.NotAsked()
 
-const loading = AsyncData.Loading();
+const loading = AsyncData.Loading()
 
-const done = AsyncData.Done(1);
+const done = AsyncData.Done(1)
 ```
 
 :::tip Since v3.0.0
@@ -42,13 +42,13 @@ AsyncData<A>.map<B>(f: (value: A) => B): AsyncData<B>
 If the asyncData is `Done(value)` returns `Done(f(value))`, otherwise returns the async data.
 
 ```ts title="Examples"
-AsyncData.Done(2).map((x) => x * 2);
+AsyncData.Done(2).map((x) => x * 2)
 // AsyncData.Done<4>
 
-AsyncData.Loading().map((x) => x * 2);
+AsyncData.Loading().map((x) => x * 2)
 // AsyncData.Loading
 
-AsyncData.NotAsked().map((x) => x * 2);
+AsyncData.NotAsked().map((x) => x * 2)
 // AsyncData.NotAsked
 ```
 
@@ -63,22 +63,22 @@ If the asyncData is `Done(value)` returns `f(value)`, otherwise returns the asyn
 ```ts title="Examples"
 AsyncData.Done(3).flatMap((x) =>
   x > 2 ? AsyncData.NotAsked() : AsyncData.Done(2),
-);
+)
 // AsyncData.NotAsked
 
 AsyncData.Done(1).flatMap((x) =>
   x > 2 ? AsyncData.NotAsked() : AsyncData.Done(2),
-);
+)
 // AsyncData.Done<2>
 
 AsyncData.NotAsked().flatMap((x) =>
   x > 2 ? AsyncData.NotAsked() : AsyncData.Done(2),
-);
+)
 // AsyncData.NotAsked
 
 AsyncData.Loading().flatMap((x) =>
   x > 2 ? AsyncData.NotAsked() : AsyncData.Done(2),
-);
+)
 // AsyncData.Loading
 ```
 
@@ -93,13 +93,13 @@ AsyncData<A>.getOr(defaultValue: A): A
 If the async data is `Done(value)` returns `value`, otherwise returns `defaultValue`.
 
 ```ts title="Examples"
-AsyncData.Done(2).getOr(1);
+AsyncData.Done(2).getOr(1)
 // 2
 
-AsyncData.Loading().getOr(1);
+AsyncData.Loading().getOr(1)
 // 1
 
-AsyncData.NotAsked().getOr(1);
+AsyncData.NotAsked().getOr(1)
 // 1
 ```
 
@@ -112,13 +112,13 @@ AsyncData<A>.mapOr(defaultValue: B, mapper: (a: A) => B): B
 If the option is `Done(value)` returns `mapper(value)`, otherwise returns `defaultValue`.
 
 ```ts title="Examples"
-AsyncData.Done(2).mapOr(1, (x) => x * 2);
+AsyncData.Done(2).mapOr(1, (x) => x * 2)
 // 4
 
-AsyncData.NotAsked().mapOr(1, (x) => x * 2);
+AsyncData.NotAsked().mapOr(1, (x) => x * 2)
 // 1
 
-AsyncData.Loading().mapOr(1, (x) => x * 2);
+AsyncData.Loading().mapOr(1, (x) => x * 2)
 // 1
 ```
 
@@ -131,11 +131,11 @@ AsyncData<A>.get(): A
 Returns the value contained in `Done(value)`. Only usable within a `isDone()` check.
 
 ```ts title="Examples"
-const value = asyncData.get();
+const value = asyncData.get()
 // does not compile
 
 if (asyncData.isDone()) {
-  const value = asyncData.get();
+  const value = asyncData.get()
   // value
 }
 ```
@@ -149,17 +149,17 @@ AsyncData<A>.isDone(): boolean
 Type guard. Checks if the option is `Done(value)`
 
 ```ts title="Examples"
-AsyncData.Done(2).isDone();
+AsyncData.Done(2).isDone()
 // true
 
-AsyncData.Loading().isDone();
+AsyncData.Loading().isDone()
 // false
 
-AsyncData.NotAsked().isDone();
+AsyncData.NotAsked().isDone()
 // false
 
 if (asyncData.isDone()) {
-  const value = asyncData.get();
+  const value = asyncData.get()
 }
 ```
 
@@ -172,13 +172,13 @@ AsyncData<A>.isLoading(): boolean
 Type guard. Checks if the option is `Loading`
 
 ```ts title="Examples"
-AsyncData.Done(2).isLoading();
+AsyncData.Done(2).isLoading()
 // false
 
-AsyncData.Loading().isLoading();
+AsyncData.Loading().isLoading()
 // true
 
-AsyncData.NotAsked().isLoading();
+AsyncData.NotAsked().isLoading()
 // false
 ```
 
@@ -191,13 +191,13 @@ AsyncData<A>.isNotAsked(): boolean
 Type guard. Checks if the option is `NotAsked`
 
 ```ts title="Examples"
-AsyncData.Done(2).isNotAsked();
+AsyncData.Done(2).isNotAsked()
 // false
 
-AsyncData.Loading().isNotAsked();
+AsyncData.Loading().isNotAsked()
 // false
 
-AsyncData.NotAsked().isNotAsked();
+AsyncData.NotAsked().isNotAsked()
 // true
 ```
 
@@ -210,13 +210,13 @@ AsyncData<A>.toOption(): Option<A>
 If the result is `Done(value)` returns `Some(value)`, otherwise returns `None`.
 
 ```ts title="Examples"
-Result.Done(2).toOption();
+Result.Done(2).toOption()
 // Option.Some<2>
 
-Result.Loading().toOption();
+Result.Loading().toOption()
 // Option.None
 
-Result.NotAsked().toOption();
+Result.NotAsked().toOption()
 // Option.None
 ```
 
@@ -237,7 +237,7 @@ const valueToDisplay = result.match({
   Done: (value) => value,
   Loading: () => "Loading ...",
   NotAsked: () => "",
-});
+})
 ```
 
 ### .tap(func)
@@ -249,7 +249,7 @@ AsyncData<A>.tap(func: (asyncData: AsyncData<A>) => unknown): AsyncData<A>
 Executes `func` with `asyncData`, and returns `asyncData`. Useful for logging and debugging.
 
 ```ts title="Examples"
-asyncData.tap(console.log).map((x) => x * 2);
+asyncData.tap(console.log).map((x) => x * 2)
 ```
 
 ## Statics
@@ -263,10 +263,10 @@ isAsyncData(value: unknown): boolean
 Type guard, checks if the provided value is an asyncData.
 
 ```ts title="Examples"
-AsyncData.isAsyncData(AsyncData.Done(1));
+AsyncData.isAsyncData(AsyncData.Done(1))
 // true
 
-AsyncData.isAsyncData([]);
+AsyncData.isAsyncData([])
 // false
 ```
 
@@ -279,13 +279,13 @@ all(asyncDatas: Array<AsyncData<A>>): AsyncData<Array<A>>
 Turns an "array of asyncDatas of value" into a "asyncData of array of value".
 
 ```ts title="Examples"
-AsyncData.all([AsyncData.Done(1), AsyncData.Done(2), AsyncData.Done(3)]);
+AsyncData.all([AsyncData.Done(1), AsyncData.Done(2), AsyncData.Done(3)])
 // AsyncData.Done<[1, 2, 3]>
 
-AsyncData.all([Result.NotAsked(), AsyncData.Done(2), AsyncData.Done(3)]);
+AsyncData.all([Result.NotAsked(), AsyncData.Done(2), AsyncData.Done(3)])
 // AsyncData.NotAsked
 
-AsyncData.all([Result.Loading(), AsyncData.Done(2), AsyncData.Done(3)]);
+AsyncData.all([Result.Loading(), AsyncData.Done(2), AsyncData.Done(3)])
 // AsyncData.Loading
 ```
 
@@ -302,35 +302,35 @@ AsyncData.allFromDict({
   a: AsyncData.Done(1),
   b: AsyncData.Done(2),
   c: AsyncData.Done(3),
-});
+})
 // AsyncData.Done<{a: 1, b: 2, c: 3}>
 
 AsyncData.allFromDict({
   a: Result.NotAsked(),
   b: AsyncData.Done(2),
   c: AsyncData.Done(3),
-});
+})
 // AsyncData.NotAsked
 
 AsyncData.allFromDict({
   a: Result.Loading(),
   b: AsyncData.Done(2),
   c: AsyncData.Done(3),
-});
+})
 // AsyncData.Loading
 ```
 
 ## TS Pattern interop
 
 ```ts title="Examples"
-import { match, P } from "ts-pattern";
-import { AsyncData } from "@bloodyowl/boxed";
+import { match, P } from "ts-pattern"
+import { AsyncData } from "@bloodyowl/boxed"
 
 match(asyncData)
   .with(AsyncData.P.Done(P.select()), (value) => console.log(value))
   .with(AsyncData.P.Loading, () => "Loading ...")
   .with(AsyncData.P.NotAsked, () => "")
-  .exhaustive();
+  .exhaustive()
 ```
 
 ## Cheatsheet

@@ -1,1 +1,1 @@
-export const BOXED_TYPE = Symbol.for("__boxed_type__");
+export const BOXED_TYPE = Symbol.for("__boxed_type__")

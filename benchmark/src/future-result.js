@@ -1,11 +1,11 @@
-const Benchmark = require("benchmark");
-const { Future, Result } = require("../../dist/Boxed");
-const fp = require("fp-ts");
-const effect = require("effect");
+const Benchmark = require("benchmark")
+const { Future, Result } = require("../../dist/Boxed")
+const fp = require("fp-ts")
+const effect = require("effect")
 
-const suite = new Benchmark.Suite();
+const suite = new Benchmark.Suite()
 
-const getRandom = () => Promise.resolve(~~(Math.random() * 2));
+const getRandom = () => Promise.resolve(~~(Math.random() * 2))
 
 suite.add("fp-ts TaskEither", {
   defer: true,
@@ -20,10 +20,10 @@ suite.add("fp-ts TaskEither", {
         ),
       )()
       .then((x) => {
-        deferred.resolve();
-      });
+        deferred.resolve()
+      })
   },
-});
+})
 
 suite.add("effect Effect", {
   defer: true,
@@ -39,10 +39,10 @@ suite.add("effect Effect", {
         effect.Effect.runPromiseExit,
       )
       .then(() => {
-        deferred.resolve();
-      });
+        deferred.resolve()
+      })
   },
-});
+})
 
 suite.add("Future", {
   defer: true,
@@ -52,13 +52,13 @@ suite.add("Future", {
         x % 2 === 0 ? Result.Ok(x) : Result.Error(new TypeError()),
       )
       .onResolve(() => {
-        deferred.resolve();
-      });
+        deferred.resolve()
+      })
   },
-});
+})
 
 suite.on("cycle", function (event) {
-  console.log(String(event.target));
-});
+  console.log(String(event.target))
+})
 
-suite.run({ async: true });
+suite.run({ async: true })

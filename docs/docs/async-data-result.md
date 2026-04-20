@@ -67,13 +67,13 @@ Takes a `AsyncData<Result<Ok, Error>>` and a `f` function taking `Ok` and return
 
 ```ts title="Examples"
 AsyncData.Done(Result.Ok(3)).mapOk((ok) => {
-  return ok * 2;
-});
+  return ok * 2
+})
 // AsyncData<Result.Ok<6>>
 
 AsyncData.Done(Result.Error("something")).mapOk((ok) => {
-  return ok * 2;
-});
+  return ok * 2
+})
 // AsyncData<Result.Error<"something">>
 ```
 
@@ -89,13 +89,13 @@ Takes a `AsyncData<Result<Ok, Error>>` and a `f` function taking `Error` and ret
 
 ```ts title="Examples"
 AsyncData.Done(Result.Error(3)).mapError((error) => {
-  return error * 2;
-});
+  return error * 2
+})
 // AsyncData<Result.Error<6>>
 
 AsyncData.Done(Result.Ok("something")).mapError((ok) => {
-  return ok * 2;
-});
+  return ok * 2
+})
 // AsyncData<Result.Ok<"something">>
 ```
 
@@ -112,17 +112,17 @@ Takes a `AsyncData<Result<Ok, Error>>` and a `f` function taking `Ok` returning 
 ```ts title="Examples"
 AsyncData.Done(Result.Ok(3)).flatMapOk((ok) =>
   AsyncData.Done(Result.Ok(ok * 2)),
-);
+)
 // AsyncData<Result.Ok<6>>
 
 AsyncData.Done(Result.Ok(3)).flatMapOk((ok) =>
   AsyncData.Done(Result.Error("Nope")),
-);
+)
 // AsyncData<Result.Error<"Nope">>
 
 AsyncData.Done(Result.Error("Error")).flatMapOk((ok) =>
   AsyncData.Done(Result.Ok(ok * 2)),
-);
+)
 // AsyncData<Result.Error<"Error">>
 ```
 
@@ -139,17 +139,17 @@ Takes a `AsyncData<Result<Ok, Error>>` and a `f` function taking `Error` returni
 ```ts title="Examples"
 AsyncData.Done(Result.Ok(3)).flatMapError((error) =>
   AsyncData.Done(Result.Ok(ok * 2)),
-);
+)
 // AsyncData<Result.Ok<3>>
 
 AsyncData.Done(Result.Error("Error")).flatMapError((error) =>
   AsyncData.Done(Result.Error("Nope")),
-);
+)
 // AsyncData<Result.Error<"Nope">>
 
 AsyncData.Done(Result.Error("Error")).flatMapError((error) =>
   AsyncData.Done(Result.Ok(1)),
-);
+)
 // AsyncData<Result.Ok<1>>
 ```
 

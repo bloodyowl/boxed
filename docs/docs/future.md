@@ -19,23 +19,23 @@ Even though we're diverging from `Promise`, you can `await` a `Future`.
 ## Create a Future
 
 ```ts title="Examples"
-import { Future } from "@bloodyowl/boxed";
+import { Future } from "@bloodyowl/boxed"
 
 // Value
-const future = Future.value(1);
+const future = Future.value(1)
 
 // Simple future
 const otherFuture = Future.make((resolve) => {
-  resolve(1);
-});
+  resolve(1)
+})
 
 // Future with cancellation effect
 const otherFuture = Future.make((resolve) => {
   const timeoutId = setTimeout(() => {
-    resolve(1);
-  }, 1000);
-  return () => clearTimeout(timeoutId);
-});
+    resolve(1)
+  }, 1000)
+  return () => clearTimeout(timeoutId)
+})
 ```
 
 ## Methods
@@ -49,7 +49,7 @@ Future<A>.onResolve(func: (value: A) => void): void
 Runs `f` with the future value as argument when available.
 
 ```ts title="Examples"
-Future.value(1).onResolve(console.log);
+Future.value(1).onResolve(console.log)
 // Log: 1
 ```
 
@@ -64,7 +64,7 @@ Runs `f` when the future is cancelled.
 ```ts title="Examples"
 future.onCancel(() => {
   // do something
-});
+})
 ```
 
 ### .map(f)
@@ -76,7 +76,7 @@ Future<A>.map<B>(func: (value: A) => B, propagateCancel?: boolean): Future<B>
 Takes a `Future<A>` and returns a new `Future<f<A>>`
 
 ```ts title="Examples"
-Future.value(3).map((x) => x * 2);
+Future.value(3).map((x) => x * 2)
 // Future<6>
 ```
 
@@ -89,7 +89,7 @@ Future<A>.flatMap<B>(func: (value: A) => Future<B>, propagateCancel?: boolean): 
 Takes a `Future<A>`, and returns a new future taking the value of the future returned by `f(A)`
 
 ```ts title="Examples"
-Future.value(3).flatMap((x) => Future.value(x * 2));
+Future.value(3).flatMap((x) => Future.value(x * 2))
 // Future<6>
 ```
 
@@ -102,7 +102,7 @@ Future<A>.tap(func: (value: A) => unknown): Future<A>
 Runs `f` with the future value, and returns the original future. Useful for debugging.
 
 ```ts title="Examples"
-Future.value(3).tap(console.log);
+Future.value(3).tap(console.log)
 // Log: 3
 // Future<3>
 ```
@@ -116,7 +116,7 @@ Future<A>.toPromise(): Promise<A>
 Takes a `Future<T>` and returns a `Promise<T>`
 
 ```ts title="Examples"
-Future.value(1).toPromise();
+Future.value(1).toPromise()
 // Promise<1>
 ```
 
@@ -135,10 +135,10 @@ isFuture(value: unknown): boolean
 Type guard, checks if the provided value is a future.
 
 ```ts title="Examples"
-Future.isFuture(Future.value(1));
+Future.isFuture(Future.value(1))
 // true
 
-Future.isFuture([]);
+Future.isFuture([])
 // false
 ```
 
@@ -151,7 +151,7 @@ all(futures: Array<Future<A>>): Future<Array<A>>
 Turns an "array of futures of values" into a "future of array of value".
 
 ```ts title="Examples"
-Future.all([Future.value(1), Future.value(2), Future.value(3)]);
+Future.all([Future.value(1), Future.value(2), Future.value(3)])
 // Future<[1, 2, 3]>
 ```
 
@@ -167,10 +167,10 @@ Like `Future.all` with a max concurrency, and in order to control the flow, prov
 Future.concurrent(
   userIds.map((userId) => {
     // notice we return a function
-    return () => getUserById(userId);
+    return () => getUserById(userId)
   }),
   { concurrency: 10 },
-);
+)
 // Future<[...]>
 ```
 
@@ -183,7 +183,7 @@ wait(ms: number): Future<void>
 Helper to create a future that resolves after `ms` (in milliseconds).
 
 ```ts title="Examples"
-Future.wait(1000).tap(() => console.log("Hey"));
+Future.wait(1000).tap(() => console.log("Hey"))
 // Logs "Hey" after 1s
 ```
 
@@ -200,7 +200,7 @@ Future.allFromDict({
   a: Future.value(1),
   b: Future.value(2),
   c: Future.value(3),
-});
+})
 // Future<{a: 1, b: 2, c: 3}>
 ```
 
@@ -213,10 +213,10 @@ fromPromise<A>(promise: Promise<A>): Future<Result<A, unknown>>
 Takes a `Promise<T>` and returns a [`Future<Result<T, Error>>`](/future-result)
 
 ```ts title="Examples"
-Future.fromPromise(Promise.resolve(1));
+Future.fromPromise(Promise.resolve(1))
 // Future<Result.Ok<1>>
 
-Future.fromPromise(Promise.reject(1));
+Future.fromPromise(Promise.reject(1))
 // Future<Result.Error<1>>
 ```
 
@@ -233,17 +233,17 @@ You can return a cleanup effect from the future `init` function:
 ```ts
 const future = Future.make((resolve) => {
   const timeoutId = setTimeout(() => {
-    resolve(1);
-  }, 1000);
+    resolve(1)
+  }, 1000)
   // will run on cancellation
-  return () => clearTimeout(timeoutId);
-});
+  return () => clearTimeout(timeoutId)
+})
 ```
 
 To cancel a `future`, call `future.cancel()`.
 
 ```ts
-future.cancel();
+future.cancel()
 ```
 
 :::note
@@ -257,15 +257,15 @@ A cancelled future will automatically cancel any future created from it (e.g. fr
 ```ts
 const future = Future.make((resolve) => {
   const timeoutId = setTimeout(() => {
-    resolve(1);
-  }, 1000);
+    resolve(1)
+  }, 1000)
   // will run on cancellation
-  return () => clearTimeout(timeoutId);
-});
+  return () => clearTimeout(timeoutId)
+})
 
-const future2 = future.map((x) => x * 2);
+const future2 = future.map((x) => x * 2)
 
-future.cancel(); // Both `future` and `future2` are cancelled
+future.cancel() // Both `future` and `future2` are cancelled
 ```
 
 ### Bubbling cancellation
@@ -274,18 +274,18 @@ All `.map*` and `.flatMap*` methods take an extra parameter called `propagateCan
 
 ```ts
 // disabled by default: cancelling `future2` will not cancel `future`
-const future2 = future.map((x) => x * 2);
+const future2 = future.map((x) => x * 2)
 
 // optin: cancelling `future2` will cancel `future`
-const future2 = future.map((x) => x * 2, true);
+const future2 = future.map((x) => x * 2, true)
 ```
 
 This can be useful at call site:
 
 ```ts
-const request = apiCall().map(parse, true);
+const request = apiCall().map(parse, true)
 
-request.cancel(); // will run the cleanup effect in `apiCall`
+request.cancel() // will run the cleanup effect in `apiCall`
 ```
 
 ## Cheatsheet

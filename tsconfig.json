@@ -6,11 +6,13 @@
     "lib": ["DOM", "DOM.Iterable", "ES2021"],
     "rootDir": "./",
     "outDir": "dist/",
+    "types": ["bun"],
 
     "allowJs": false,
     "declaration": true,
     "esModuleInterop": true,
     "sourceMap": true,
+    "skipLibCheck": true,
     "strict": true,
     "stripInternal": true,
 

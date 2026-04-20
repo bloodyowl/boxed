@@ -18,11 +18,11 @@ More often than not, these functional programming libraries use lazy initialisat
 In the vast majority of cases we've seen, this is not something that's wanted. For the few cases where laziness is wanted, making a function that returns the data-structure or using a `Deferred` does the job pretty well.
 
 ```ts
-const eagerFuture = Future.make((resolve) => resolve(1));
+const eagerFuture = Future.make((resolve) => resolve(1))
 
-const lazyFuture = () => Future.make((resolve) => resolve(1));
+const lazyFuture = () => Future.make((resolve) => resolve(1))
 
-const [deferred, resolve] = Deferred.make<number>();
+const [deferred, resolve] = Deferred.make<number>()
 ```
 
 ## Naming

@@ -1,7 +1,7 @@
-import { expect, test } from "vitest";
-import { AsyncData } from "../src/AsyncData";
-import { Option, Result } from "../src/OptionResult";
-import { decode, encode } from "../src/Serializer";
+import { expect, test } from "bun:test"
+import { AsyncData } from "../src/AsyncData"
+import { Option, Result } from "../src/OptionResult"
+import { decode, encode } from "../src/Serializer"
 
 test("Serializer", () => {
   const start = {
@@ -22,13 +22,13 @@ test("Serializer", () => {
         }),
       ),
     ),
-  };
-  expect(encode(start)).toEqual(encode(start));
-  expect(encode(start)).toContain("__boxed_type__");
-  expect(decode(encode(start))).toEqual(start);
+  }
+  expect(encode(start)).toEqual(encode(start))
+  expect(encode(start)).toContain("__boxed_type__")
+  expect(decode(encode(start))).toEqual(start)
   expect(decode(encode(start)).value.map(() => "Hello")).toEqual(
     AsyncData.Done("Hello"),
-  );
-  expect(encode(null)).toEqual("null");
-  expect(encode(undefined)).toEqual(undefined);
-});
+  )
+  expect(encode(null)).toEqual("null")
+  expect(encode(undefined)).toEqual(undefined)
+})

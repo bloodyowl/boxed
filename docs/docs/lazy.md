@@ -10,11 +10,11 @@ Creates a lazy value. The computation won't happen until the first access.
 A `lazy` type exposes a `get` method that'll return the result from the computation.
 
 ```ts
-import { Lazy } from "@bloodyowl/boxed";
+import { Lazy } from "@bloodyowl/boxed"
 
 const lazy = Lazy(() => {
-  return myComputation();
-});
+  return myComputation()
+})
 ```
 
 ## lazy.get()
@@ -22,5 +22,5 @@ const lazy = Lazy(() => {
 Computes the value **once** and returns it.
 
 ```ts
-lazy.get(); // value is computed and return here
+lazy.get() // value is computed and return here
 ```

@@ -2,9 +2,5 @@
   "extends": "./tsconfig.json",
   "include": ["**/*.test.ts"],
   "exclude": ["node_modules", "dist"],
-  "lib": ["DOM", "DOM.Iterable", "ES2021"],
-  "compilerOptions": {
-    "noEmit": true,
-    "skipLibCheck": true
-  }
+  "lib": ["DOM", "DOM.Iterable", "ES2021"]
 }
