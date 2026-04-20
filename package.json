@@ -10,9 +10,8 @@
     "url": "https://github.com/bloodyowl/boxed.git"
   },
   "type": "module",
-  "main": "dist/Boxed.js",
-  "source": "src/Boxed.ts",
-  "types": "dist/Boxed.d.ts",
+  "main": "dist/src/Boxed.js",
+  "types": "dist/src/Boxed.d.ts",
   "files": [
     "LICENSE",
     "dist",
