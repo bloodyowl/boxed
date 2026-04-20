@@ -7,7 +7,7 @@ When using the naive `fetch`, cancelling a request can be inelegant:
 
 ```ts
 import { useEffect } from "react";
-import { Result } from "@swan-io/boxed";
+import { Result } from "@bloodyowl/boxed";
 
 const callMyApi = (url, { signal }) => {
   return fetch(url, { signal })
@@ -32,7 +32,7 @@ Using `Future` can make this easier:
 
 ```ts
 import { useEffect } from "react";
-import { Future, Result } from "@swan-io/boxed";
+import { Future, Result } from "@bloodyowl/boxed";
 
 const callMyApi = (url: string) =>
   Future.make((resolve) => {

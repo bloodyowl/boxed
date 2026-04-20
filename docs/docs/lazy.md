@@ -10,7 +10,7 @@ Creates a lazy value. The computation won't happen until the first access.
 A `lazy` type exposes a `get` method that'll return the result from the computation.
 
 ```ts
-import { Lazy } from "@swan-io/boxed";
+import { Lazy } from "@bloodyowl/boxed";
 
 const lazy = Lazy(() => {
   return myComputation();

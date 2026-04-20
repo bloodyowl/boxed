@@ -4,7 +4,7 @@ sidebar_label: Array
 ---
 
 ```ts
-import { Array } from "@swan-io/boxed";
+import { Array } from "@bloodyowl/boxed";
 ```
 
 ## Array.filterMap(array, func)
@@ -14,9 +14,7 @@ Returns an array containing the `Option.Some` values returned by `func` for each
 This function can be useful to refine the types of an array.
 
 ```ts title="Examples"
-Array.filterMap([1, 2, 3], (x) =>
-  isEven(x) ? Option.Some(x) : Option.None(),
-); // [2]
+Array.filterMap([1, 2, 3], (x) => (isEven(x) ? Option.Some(x) : Option.None())); // [2]
 ```
 
 ## Array.findMap(array, func)
@@ -24,9 +22,7 @@ Array.filterMap([1, 2, 3], (x) =>
 Returns the first `Option.Some` value returned by `func` for each array item.
 
 ```ts title="Examples"
-Array.findMap([1, 2, 3], (x) =>
-  isEven(x) ? Option.Some(x) : Option.None(),
-); // Option.Some(2)
+Array.findMap([1, 2, 3], (x) => (isEven(x) ? Option.Some(x) : Option.None())); // Option.Some(2)
 ```
 
 ## Array.find(array, predicate)

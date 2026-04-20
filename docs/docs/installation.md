@@ -12,11 +12,11 @@ Even though you can use Boxed without TypeScript and still leverage some benefit
 In your console
 
 ```console
-$ yarn add @swan-io/boxed
+$ yarn add @bloodyowl/boxed
 ```
 
 or
 
 ```console
-$ npm install @swan-io/boxed
+$ npm install @bloodyowl/boxed
 ```

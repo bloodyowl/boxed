@@ -21,7 +21,7 @@ Here's how we can represent this using the `AsyncData` type.
 
 ```ts
 import { useState, useEffect } from "react";
-import { AsyncData } from "@swan-io/boxed";
+import { AsyncData } from "@bloodyowl/boxed";
 import { queryUser, User } from "./api";
 
 type Props = {

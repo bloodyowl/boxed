@@ -4,7 +4,7 @@ sidebar_label: Dict
 ---
 
 ```ts
-import { Dict } from "@swan-io/boxed";
+import { Dict } from "@bloodyowl/boxed";
 ```
 
 ## Dict.entries(dict)

@@ -39,7 +39,7 @@ function HomepageHeader() {
       </div>
       <div className={styles.heroCode}>
         <CodeBlock className={styles.heroCodeBlock} language="typescript">
-          {`import { AsyncData } from "@swan-io/boxed";
+          {`import { AsyncData } from "@bloodyowl/boxed";
 
 const UserCard = ({user}: {user: AsyncData<User>}) => {
   return user.match({

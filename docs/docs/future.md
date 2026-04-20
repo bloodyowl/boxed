@@ -19,7 +19,7 @@ Even though we're diverging from `Promise`, you can `await` a `Future`.
 ## Create a Future
 
 ```ts title="Examples"
-import { Future } from "@swan-io/boxed";
+import { Future } from "@bloodyowl/boxed";
 
 // Value
 const future = Future.value(1);

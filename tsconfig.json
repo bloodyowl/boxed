@@ -1,16 +1,15 @@
 {
   "include": ["src"],
   "compilerOptions": {
-    "module": "ES2015",
+    "module": "esnext",
     "target": "ES2015",
     "lib": ["DOM", "DOM.Iterable", "ES2021"],
-    "moduleResolution": "Node",
+    "rootDir": "./",
     "outDir": "dist/",
 
     "allowJs": false,
     "declaration": true,
     "esModuleInterop": true,
-    "noEmit": true,
     "sourceMap": true,
     "strict": true,
     "stripInternal": true,

@@ -17,7 +17,7 @@ Just like the `Option` type, the `Result` type is a box that can have two states
 To create a result, use the `Ok` and `Error` constructors:
 
 ```ts
-import { Result } from "@swan-io/boxed";
+import { Result } from "@bloodyowl/boxed";
 
 const ok = Result.Ok(1);
 
@@ -27,7 +27,7 @@ const notOk = Result.Error("something happened");
 You can convert an option to a `Result`:
 
 ```ts
-import { Result, Option } from "@swan-io/boxed";
+import { Result, Option } from "@bloodyowl/boxed";
 
 const a = Result.fromOption(Option.Some(1), "NotFound");
 // Ok<1>
@@ -441,7 +441,7 @@ const b = Result.fromOption(Option.None(), "NotFound");
 
 ```ts
 import { match, P } from "ts-pattern";
-import { Result } from "@swan-io/boxed";
+import { Result } from "@bloodyowl/boxed";
 
 match(myResult)
   .with(Result.P.Ok(P.select()), (value) => console.log(value))

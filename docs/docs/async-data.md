@@ -16,7 +16,7 @@ The `AsyncData` type enables representing asynchronous flows (e.g. requests). Th
 To create an async data, use the `NotAsked`, `Loading` and `Done` constructors:
 
 ```ts title="Examples"
-import { AsyncData } from "@swan-io/boxed";
+import { AsyncData } from "@bloodyowl/boxed";
 
 const notAsked = AsyncData.NotAsked();
 
@@ -324,7 +324,7 @@ AsyncData.allFromDict({
 
 ```ts title="Examples"
 import { match, P } from "ts-pattern";
-import { AsyncData } from "@swan-io/boxed";
+import { AsyncData } from "@bloodyowl/boxed";
 
 match(asyncData)
   .with(AsyncData.P.Done(P.select()), (value) => console.log(value))

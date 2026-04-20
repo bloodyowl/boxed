@@ -1,16 +1,16 @@
 {
-  "name": "@swan-io/boxed",
-  "version": "3.2.1",
+  "name": "@bloodyowl/boxed",
+  "version": "3.3.0",
   "license": "MIT",
   "description": "Utility types for functional TypeScript",
   "author": "Matthias Le Brun <bloodyowl@swan.io>",
   "homepage": "https://boxed.cool",
   "repository": {
     "type": "git",
-    "url": "https://github.com/swan-io/boxed.git"
+    "url": "https://github.com/bloodyowl/boxed.git"
   },
+  "type": "module",
   "main": "dist/Boxed.js",
-  "module": "dist/Boxed.mjs",
   "source": "src/Boxed.ts",
   "types": "dist/Boxed.d.ts",
   "files": [
@@ -35,7 +35,7 @@
     ]
   },
   "scripts": {
-    "build": "yarn clean && microbundle -f cjs,es",
+    "build": "yarn clean && tsc",
     "clean": "rm -rf dist",
     "format": "prettier '**/*' -u -w",
     "prepack": "yarn test && yarn build",
@@ -53,7 +53,7 @@
     "prettier": "^3.1.0",
     "prettier-plugin-organize-imports": "^3.2.4",
     "ts-pattern": "^5.0.6",
-    "typescript": "^5.3.2",
+    "typescript": "^6.0.0",
     "vitest": "^1.0.1"
   },
   "peerDependencies": {

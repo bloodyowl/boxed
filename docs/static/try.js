@@ -1,4 +1,4 @@
-import("https://unpkg.com/@swan-io/boxed/dist/Boxed.mjs").then((Boxed) => {
+import("https://unpkg.com/@bloodyowl/boxed/dist/Boxed.mjs").then((Boxed) => {
   window.Boxed = Boxed;
   const { Array, ...SafeBoxed } = Boxed;
   Object.assign(window, SafeBoxed);
@@ -11,11 +11,5 @@ import("https://unpkg.com/@swan-io/boxed/dist/Boxed.mjs").then((Boxed) => {
     "%ce.g. %cOption.fromNullable(1).getOr(0)",
     "color: #ccc;font-family: monospace;",
     "",
-  );
-  console.log("%c---", "color: #ccc;");
-  console.log("%cLooking for a job? 👀", "font-weight: 700;");
-  console.log(
-    "👋 %cSwan is hiring: https://www.welcometothejungle.com/fr/companies/swan/jobs",
-    "font-weight: 700;",
   );
 });

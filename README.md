@@ -1,10 +1,10 @@
-<img width="108" alt="@swan-io/boxed logo" src="https://github.com/swan-io/boxed/blob/main/docs/static/img/logo.svg?raw=true">
+<img width="108" alt="@bloodyowl/boxed logo" src="https://github.com/bloodyowl/boxed/blob/main/docs/static/img/logo.svg?raw=true">
 
-# @swan-io/boxed
+# @bloodyowl/boxed
 
-[![mit licence](https://img.shields.io/dub/l/vibe-d.svg?style=for-the-badge)](https://github.com/swan-io/boxed/blob/main/LICENSE)
-[![npm version](https://img.shields.io/npm/v/@swan-io/boxed?style=for-the-badge)](https://www.npmjs.org/package/@swan-io/boxed)
-[![bundlephobia](https://img.shields.io/bundlephobia/minzip/@swan-io/boxed?label=size&style=for-the-badge)](https://bundlephobia.com/result?p=@swan-io/boxed)
+[![mit licence](https://img.shields.io/dub/l/vibe-d.svg?style=for-the-badge)](https://github.com/bloodyowl/boxed/blob/main/LICENSE)
+[![npm version](https://img.shields.io/npm/v/@bloodyowl/boxed?style=for-the-badge)](https://www.npmjs.org/package/@bloodyowl/boxed)
+[![bundlephobia](https://img.shields.io/bundlephobia/minzip/@bloodyowl/boxed?label=size&style=for-the-badge)](https://bundlephobia.com/result?p=@bloodyowl/boxed)
 
 > Essential building-blocks for functional & safe TypeScript code
 
@@ -30,9 +30,9 @@
 ## Installation
 
 ```bash
-$ yarn add @swan-io/boxed
+$ yarn add @bloodyowl/boxed
 # --- or ---
-$ npm install --save @swan-io/boxed
+$ npm install --save @bloodyowl/boxed
 ```
 
 ## Links

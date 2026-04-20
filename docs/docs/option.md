@@ -17,7 +17,7 @@ An option can have two possible states:
 To create an option, use the `Some` and `None` constructors:
 
 ```ts
-import { Option } from "@swan-io/boxed";
+import { Option } from "@bloodyowl/boxed";
 
 const aName = Option.Some("John");
 const bName = Option.None();
@@ -424,7 +424,7 @@ Option.allFromDict({ a: Option.None(), b: Option.Some(2), c: Option.Some(3) });
 
 ```ts title="Examples"
 import { match, P } from "ts-pattern";
-import { Option } from "@swan-io/boxed";
+import { Option } from "@bloodyowl/boxed";
 
 match(myOption)
   .with(Option.P.Some(P.select()), (value) => console.log(value))

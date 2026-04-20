@@ -73,7 +73,7 @@ if (errors.length) {
 In both cases, we are required to have handle the `validation` state manually, which increases complexity and can lead to UI inconsistencies. Let's see how we can leverage the `Result` type for such patterns:
 
 ```ts
-import { Result } from "@swan-io/boxed";
+import { Result } from "@bloodyowl/boxed";
 
 const validate = (input: FormInput): Result<FormInput, Array<string>> => {
   const errors = [];

@@ -18,7 +18,7 @@ module.exports = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "swan-io", // Usually your GitHub org/user name.
+  organizationName: "bloodyowl", // Usually your GitHub org/user name.
   projectName: "boxed", // Usually your repo name.
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -39,7 +39,7 @@ module.exports = {
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/swan-io/boxed/edit/main/docs/",
+          editUrl: "https://github.com/bloodyowl/boxed/edit/main/docs/",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
@@ -94,22 +94,15 @@ module.exports = {
             position: "left",
           },
           {
-            href: "https://github.com/swan-io/boxed",
+            href: "https://github.com/bloodyowl/boxed",
             label: "GitHub",
             position: "right",
           },
         ],
       },
       footer: {
-        logo: {
-          alt: "Swan Open Source",
-          src: "img/swan-opensource.svg",
-          href: "https://swan.io",
-          width: 116,
-          height: 43,
-        },
         style: "dark",
-        copyright: `Copyright © ${new Date().getFullYear()} Swan`,
+        copyright: `Copyright © ${new Date().getFullYear()} Matthias Le Brun`,
       },
       metadata: [
         { name: "twitter:card", content: "summary_large_image" },
