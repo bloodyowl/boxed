@@ -39,7 +39,7 @@
     "build": "yarn clean && tsc",
     "clean": "rm -rf dist",
     "format": "prettier '**/*' -u -w",
-    "prepack": "yarn test && yarn build",
+    "prepack": "bun test && bun run build",
     "test:typecheck": "tsc --noEmit -p tsconfig.test.json",
     "typecheck": "tsc --noEmit",
     "benchmark": "node benchmark/src/option && node benchmark/src/result && node benchmark/src/future && node benchmark/src/future-result"
