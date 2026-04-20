@@ -120,7 +120,7 @@ Future.value(1).toPromise()
 // Promise<1>
 ```
 
-## [Future<Result<Ok, Error>>](/future-result)
+## [Future\<Result\<Ok, Error>>](/future-result)
 
 We provide [some special helpers](/future-result) for `Future`s containing a `Result`.
 

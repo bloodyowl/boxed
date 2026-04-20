@@ -96,7 +96,7 @@ const name = user
 
 ## The main kind of boxes
 
-### [**Option<Value\>**](/option)
+### [**Option\<Value>**](/option)
 
 Represents optional values:
 
@@ -104,7 +104,7 @@ Represents optional values:
 - Makes it possible to differentiate nested optionality (`Some(None())` vs `None()`)
 - Reduces the number of codepaths needed to read and transform such values
 
-### [**Result<Ok, Error\>**](/result)
+### [**Result\<Ok, Error>**](/result)
 
 Represents a computation that can either succeed or fail:
 
@@ -112,7 +112,7 @@ Represents a computation that can either succeed or fail:
 - Allows you to have a single codepath instead or "return or throw".
 - Makes it easy to aggregate all possible errors a stack can generate
 
-### [**AsyncData<Value\>**](/async-data)
+### [**AsyncData\<Value>**](/async-data)
 
 Represents a value with an asynchronous lifecycle:
 
@@ -120,7 +120,7 @@ Represents a value with an asynchronous lifecycle:
 - Avoids inconsistent states induced by traditional modeling
 - Allows you to tie the lifecycle information with the value itself
 
-### [**Future<Value\>**](/future)
+### [**Future\<Value>**](/future)
 
 Represents an asynchronous value:
 
