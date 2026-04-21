@@ -2,6 +2,8 @@ import { Option } from "./OptionResult"
 
 export const from = Array.from
 
+export const fromAsync = Array.fromAsync
+
 export const of = Array.of
 
 export const isArray = Array.isArray
