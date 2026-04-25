@@ -164,6 +164,22 @@ Result.Error(2).getOr(1)
 // 1
 ```
 
+### .getOrThrow()
+
+```ts
+Result<A, E>.getOrThrow(): A | never
+```
+
+If the result is `Ok(value)` returns `value`, otherwise will throw an error.
+
+```ts title="Examples"
+const value = Result.Ok(1).getOrThrow();
+// 2
+
+const value = Result.Error(2).getOrThrow();
+// Uncaught: Tried to unwrap a Result.Error value
+```
+
 ### .mapOr(defaultValue, mapper)
 
 ```ts

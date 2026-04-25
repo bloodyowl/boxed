@@ -173,6 +173,22 @@ if (option.isSome()) {
 }
 ```
 
+### .getOrThrow()
+
+```ts
+Option<A>.getOrThrow(): A | never
+```
+
+Returns the value contained in `Some(value)`, otherwise will throw an error.
+
+```ts title="Examples"
+const value = Option.Some(1).getOrThrow();
+// 2
+
+const value = Option.None().getOrThrow();
+// Uncaught: Tried to unwrap a Option.None value
+```
+
 ### .isSome()
 
 ```ts
