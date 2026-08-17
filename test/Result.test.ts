@@ -71,6 +71,16 @@ test("Result.getOr", () => {
   expect(Result.Error<number, number>(1).getOr(0)).toEqual(0)
 })
 
+test("Result.getOrThrow", () => {
+  expect(Result.Ok(1).getOrThrow()).toEqual(1);
+  expect(() => Result.Error(1).getOrThrow()).toThrowError(
+    "Tried to unwrap a Result.Error value",
+  );
+  expect(() => Result.Error("AnErrorMessage").getOrThrow()).toThrowError(
+    "AnErrorMessage",
+  );
+});
+
 test("Result.mapOr", () => {
   expect(Result.Ok(1).mapOr(0, (x) => x * 2)).toEqual(2)
   expect(Result.Error<number, number>(1).mapOr(0, (x) => x * 2)).toEqual(0)
