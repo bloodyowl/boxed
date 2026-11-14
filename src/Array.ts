@@ -85,7 +85,9 @@ export const binarySearchBy = <A>(
   while (true) {
     let mid = (low + (high - low) / 2) | 0
     if (mid === low || mid === high) {
-      return high
+      // range is down to `low` and `high`: `high` was never compared, and
+      // `low` was only compared when it moved up from 0
+      return compare(key, sortedArray[low] as A) <= 0 ? low : high
     }
     let midItem = sortedArray[mid] as A
     let diff = compare(key, midItem)
