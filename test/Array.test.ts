@@ -97,6 +97,18 @@ test("Array.binarySearchBy", () => {
   expect(binarySearchBy([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5)).toEqual(4)
   expect(binarySearchBy([1, 2, 3, 4, 6, 7, 8, 9, 10], 5)).toEqual(4)
   expect(binarySearchBy([], 2)).toEqual(-1)
+  // exact match or first superior value at index 0
+  expect(binarySearchBy([1, 3], 1)).toEqual(0)
+  expect(binarySearchBy([10, 20, 30], 10)).toEqual(0)
+  expect(binarySearchBy(["a", "b", "c"], "a")).toEqual(0)
+  expect(binarySearchBy([4, 5, 7, 9], 2)).toEqual(0)
+  expect(binarySearchBy([4, 5, 7, 9], 4)).toEqual(0)
+  expect(binarySearchBy([1, 3], 2)).toEqual(1)
+  expect(binarySearchBy([1, 3], 3)).toEqual(1)
+  expect(binarySearchBy([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 1)).toEqual(0)
+  expect(binarySearchBy([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 2)).toEqual(1)
+  expect(binarySearchBy([1], 1)).toEqual(0)
+  expect(binarySearchBy([1], 0)).toEqual(0)
 })
 
 test("Array.of", () => {
